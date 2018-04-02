@@ -1,0 +1,13 @@
+{
+  "rpc_node": "https://api.steemit.com",
+  "account": "guest123",
+  "posting_key": "5JRaypasxMx1L97ZUX7YuC5Psb5EAbF821kkAGtBj7xCJFQcbLg",
+  "voting_weight": "70",
+  "voting_delay": "0.5",
+  "tags": [
+    "fr",
+  ],
+  "whitelist": ["cryptohazard"],
+  "_comment": "this is a comment - ceci est un commentaire",
+  "blacklist": ["ned","dan"]
+}

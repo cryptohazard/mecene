@@ -1,0 +1,23 @@
+{
+  "name": "mecene",
+  "version": "0.0.1",
+  "description": "mecene bot to support communities on the steem blockchain",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js bot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cryptohazard/mecene.git"
+  },
+  "author": "cryptohazard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cryptohazard/mecene/issues"
+  },
+  "homepage": "https://github.com/cryptohazard/mecene#readme",
+  "dependencies": {
+    "steem": "^0.7.1"
+  }
+}
