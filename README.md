@@ -1,3 +1,4 @@
+![Mecene](https://user-images.githubusercontent.com/34451833/38692703-514dcf9a-3e8d-11e8-8b92-95f8870642c0.png)
 # mecene
 *mécène: French for sponsor, donator, patron. [wiktionary](https://en.wiktionary.org/wiki/m%C3%A9c%C3%A8ne)*
 
@@ -69,3 +70,6 @@ Configuration is stored in the JSON ```config.json```.
   * until power at Y%
   * then recover until Z% power
 * blacklist downvote (I am not keen on that one)
+
+## Logo
+*Thanks @radudangratian for the cool logo!*
