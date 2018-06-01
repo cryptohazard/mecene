@@ -48,16 +48,23 @@ $ pm2 logs mecene
 
 Configuration is stored in the JSON ```config.json```.
 
-|        Option       | Value                                                |
-|:-------------------:|------------------------------------------------------|
-| rpc_node            | a steem node to connect. Default is steemit API node |
-| account             | bot account                                          |
-| posting_key         | the private posting key of the bot account          |
-| voting_weight       | vote weight (in percent) to apply on every vote      |
-| tags                | communities tags to upvote posts like #fr, #art,...  |
-| voting_delay        | waiting time before the actual vote                  |
-| whitelist           | list of authors to automatically sponsor             |
-| blacklist           | A list of authors to ignore                          |
+|        Option       |         Definition                                   |  Default Values |
+|:-------------------:|------------------------------------------------------|-----------------|
+| rpc_node            | a steem node to connect                              |steemit API node |
+| account             | bot account                                          |                 |
+| posting_key         | the private posting key of the bot account           |                 |
+| minimum_power       | the minimum voting power at which the bot operates   | 10 %            |
+| minimum_reputation  | the minimum reputation of authors                    | 25              |
+| maximum_reputation  | the maximum reputation of authors                    | 70              |
+| voting_weight       | vote weight (in percent) to apply on every vote      | 70 %             |
+| voting_delay        | waiting time in minutes before the actual vote       | 30 minutes      |
+| tags                | communities tags to upvote posts like #fr, #art,...  |                 |
+| whitelist           | list of authors to automatically sponsor             |                 |
+| whitelist_power     | voting weigth for whitelisted authors                | 70 %            |
+| blacklist           | A list of authors to ignore                          |                 |
+| blacklist_tags      | A list of authors to ignore                          |                 |
+
+
 
 ## TODO
 * vote weight per sponsored tags/authors

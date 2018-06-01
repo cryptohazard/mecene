@@ -13,13 +13,16 @@ bot();
 
 function bot(){
   console.log("Mecene bot starting...");
-  console.log(config);
-  console.log(config.account);
+  //console.log(config);
+  console.log("Bot account: ",config.account);
   const username = config.account;
   const postingWif = config.posting_key;
-  const weight = parseInt(config.voting_weight) * 100;
-  const delay = parseInt(config.voting_delay) * 60 * 1000;
-  //console.log(config.blacklist)
+  const weight = config.voting_weight ? parseInt(config.voting_weight) * 100 : 100 * 100;
+  const delay = config.voting_delay ? parseInt(config.voting_delay) * 60 * 1000 : 30 * 60 * 1000;
+  const minimum_power = config.minimum_power ? parseInt(config.minimum_power) * 100 : 10 * 100;
+  const whitelist_power = config.whitelist_power ? parseInt(config.whitelist_power) * 100 : 70 * 100;
+  const minimum_reputation = config.minimum_reputation ? parseInt(config.minimum_reputation) : 25;
+  const maximum_reputation = config.maximum_reputation ? parseInt(config.maximum_reputation) : 70;
 
   steem.api.streamOperations(function (err, operations) {
 
@@ -37,23 +40,20 @@ function bot(){
         return;
       }
 
-      //whitelist with a 100%(10000) vote for now
+      //whitelist with a whitelist_power vote
       if (config.whitelist.includes(operation.author)){
         console.log("Account whitelisted - post sponsored: " + operation.permlink);
         setTimeout(function(){
-          voter(username, postingWif, operation, 7000);
+          voter(username, postingWif, operation, weight, minimum_power, minimum_reputation, maximum_reputation, 0);
         }, delay);
         return;
       }
 
-      //console.log(operation.json_metadata)
       meta = operation.json_metadata;
       if (meta !== undefined){
         metaJSON = JSON.parse(meta);
-        //console.log(metaJSON.tags)
 		    config.tags.forEach(function(tag){
           if (metaJSON.tags.includes(tag)){
-            console.log("vote impeding on: " + operation.permlink);
             setTimeout(function(){
               //This is where the magic happens
               voter(username, postingWif, operation, weight);
@@ -65,20 +65,47 @@ function bot(){
   });
 }
 
-function voter(username,postingWif,operation, weight,retry){
-	steem.broadcast.vote(postingWif, username, operation.author, operation.permlink, weight, function(err, result) {
-		console.log(err, result);
-    if (err && retry<5){
-			setTimeout(function(){
-				//do what you need here
-        retry++;
-				voter(username, postingWif, operation, weight,retry);
-				//console.log("voted on: " + operation.permlink);
-			}, 4000);
-		} else if (retry == 5){
-      console.log("failed vote broadcast for: " + operation.permlink);
-    } else {
-      console.log("voted on: " + operation.permlink);
+function voter(username,postingWif,operation, weight, minimum_power, minimum_reputation, maximum_reputation, retry){
+  //check we have enough voting power
+  steem.api.getAccounts([username], function(errr, response) {
+    if (errr)
+      console.log(err);
+
+    if (parseInt(response[0].voting_power) < minimum_power ){
+      console.log("Voting power too low to proceed!")
+      return;
     }
-	});
+    steem.api.getAccounts([operation.author], function(er, resp) {
+      if (er)
+        console.log(er);
+      var reputation = steem.formatter.reputation(resp[0].reputation);
+      if (reputation < minimum_reputation){
+        console.log("Account ", operation.author, " has a too low reputation ", reputation);
+        return;
+      }
+      if (reputation > maximum_reputation){
+        console.log("Account ", operation.author, " has a too big reputation ", reputation);
+        return;
+      }
+
+      console.log("vote impeding on: " + operation.permlink);
+      steem.broadcast.vote(postingWif, username, operation.author, operation.permlink, weight, function(err, result) {
+    		console.log(err, result);
+
+        console.log ("retry",retry++)
+        if (err && retry<5){
+    			setTimeout(function(){
+    				//do what you need here
+            retry++;
+    				voter(username, postingWif, operation, weight, minimum_power, minimum_reputation, maximum_reputation, retry);
+    				//console.log("voted on: " + operation.permlink);
+    			}, 4000);
+    		} else if (retry == 5){
+          console.log("failed vote broadcast for: " + operation.permlink);
+        } else {
+          console.log("voted on: " + operation.permlink);
+        }
+    	});
+    });
+  });
 }
