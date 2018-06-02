@@ -52,6 +52,15 @@ function bot(){
       meta = operation.json_metadata;
       if (meta !== undefined){
         metaJSON = JSON.parse(meta);
+
+        //tags blacklisted
+        config.blacklist_tags.forEach(function(blacklistTag){
+          if (metaJSON.tags.includes(blacklistTag)){
+            console.log("Tag blacklisted: ", blacklistTag," for article " + operation.permlink);
+          }
+        });
+
+        //tags sponsored
 		    config.tags.forEach(function(tag){
           if (metaJSON.tags.includes(tag)){
             setTimeout(function(){
