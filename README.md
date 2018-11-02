@@ -65,6 +65,8 @@ Configuration is stored in the JSON ```config.json```.
 | blacklist_tags      | A list of authors to ignore                          |                 |
 
 
+## Witness
+TODO
 
 ## TODO
 * vote weight per sponsored tags/authors
